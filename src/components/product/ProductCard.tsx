@@ -1,5 +1,9 @@
-import Image from "next/image";
 import React from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/lib/hooks/hooks";
+import { addProduct } from "@/lib/store/features/cart/cartSlice";
+import { getTruncateText } from "@/utils/getTruncateText";
 
 interface Product {
   id: number;
@@ -16,18 +20,23 @@ interface Product {
 
 interface ProductProps {
   product: Product;
+  isAddedToCart: boolean;
+  notify: (title: string) => void
 }
 
-function ProductCard({ product }: ProductProps) {
+function ProductCard({ product, isAddedToCart, notify }: ProductProps) {
 
-  const getTruncateDescription = (description: string, maxLength: number) => {
-    if (description.length <= maxLength) {
-        return description;
-    }
+  const dispatch = useAppDispatch()
+  const router = useRouter()
 
-    const truncated = description.substring(0, maxLength - 3);
-    return truncated + '...';
-}
+  const handleAddToCart = () => {
+    dispatch(addProduct({ product, qty: 1 }))
+    notify(product.title)
+  }
+
+  const handleGoToCart = () => {
+    router.push('/cart')
+  }
 
   return (
     <div className="w-full max-w-sm bg-white border border-gray-300 rounded-lg hover:shadow-md flex flex-col justify-between">
@@ -43,7 +52,7 @@ function ProductCard({ product }: ProductProps) {
       <div className="px-5 pb-5">
         <a href="#">
           <h5 className="text-xl font-semibold tracking-tight text-gray-700">
-            {getTruncateDescription(product.title, 50)}
+            {getTruncateText(product.title, 50)}
           </h5>
         </a>
         <div className="flex items-center mt-2.5 mb-5">
@@ -104,9 +113,12 @@ function ProductCard({ product }: ProductProps) {
           </span>
           <button
             type="button"
+            onClick={isAddedToCart ? handleGoToCart : handleAddToCart}
             className="border border-gray-300 text-black hover:bg-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
           >
-            Add to cart
+            {
+              isAddedToCart ? "Go to cart" : "Add to cart"
+            }
           </button>
         </div>
       </div>
