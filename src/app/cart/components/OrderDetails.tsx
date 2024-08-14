@@ -1,11 +1,16 @@
-'use client'
+"use client";
 
-import Skeleton from "@/components/loading/Skeleton";
+import React, { FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { CartProduct } from "@/interfaces/product";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { removeAllProducts } from "@/lib/store/features/cart/cartSlice";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+
+enum CouponCode {
+  YNOT10 = "YNOT10",
+  YNOT10DOLLAR = "YNOT10DOLLAR",
+}
 
 interface OrderSummary {
   originalTotalPrice: number;
@@ -15,16 +20,39 @@ interface OrderSummary {
 function OrderDetails() {
   const [originalTotalPrice, setOriginalTotalPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [discounts, setDiscounts] = useState(0)
+  const [discounts, setDiscounts] = useState(0);
+  const [couponCode, setCouponCode] = useState("");
 
   const cartProducts = useAppSelector((state) => state.cart.products);
-  const dispatch = useAppDispatch()
-  const router = useRouter()
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleCheckout = () => {
-    dispatch(removeAllProducts())
-    router.push('/checkout')
-  }
+    dispatch(removeAllProducts());
+    router.push("/checkout");
+  };
+
+  const handleApplyCode = (e: FormEvent) => {
+    e.preventDefault();
+
+
+    let discountedPrice: number | null = 0;
+
+    if (couponCode === CouponCode.YNOT10) {
+      discountedPrice = originalTotalPrice * 0.1;
+    } else if (couponCode === CouponCode.YNOT10DOLLAR) {
+      discountedPrice = 10;
+    }
+
+    if (!discountedPrice) {
+      toast.error("Invalid coupon code. (Try YNOT10 / YNOT10DOLLAR)");
+      return;
+    }
+
+    setTotalPrice(originalTotalPrice - discountedPrice);
+    setDiscounts(discountedPrice);
+    toast.success("Coupon code Applied!")
+  };
 
   const handleOrderSummary = () => {
     const orderSummary = cartProducts.reduce(
@@ -48,7 +76,8 @@ function OrderDetails() {
 
   return (
     <div className="mx-auto mt-6 flex-1 space-y-6 lg:mt-0">
-      {cartProducts.length > 0 ? (
+      <ToastContainer />
+      {cartProducts.length > 0 && (
         <div className="space-y-4 rounded-lg text-black border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
           <p className="text-xl font-semibold text-gray-900">Order summary</p>
 
@@ -67,9 +96,7 @@ function OrderDetails() {
                 <dt className="text-base font-normal text-gray-500">
                   Delivery Fee
                 </dt>
-                <dd className="text-base font-medium text-gray-900">
-                  +$0
-                </dd>
+                <dd className="text-base font-medium text-gray-900">+$0</dd>
               </dl>
 
               <dl className="flex items-center justify-between gap-2">
@@ -77,7 +104,7 @@ function OrderDetails() {
                   Discounts
                 </dt>
                 <dd className="text-base font-medium text-gray-900">
-                  -${discounts}
+                  -${discounts.toFixed(2)}
                 </dd>
               </dl>
             </div>
@@ -91,7 +118,7 @@ function OrderDetails() {
           </div>
 
           <button
-            type='button'
+            type="button"
             onClick={handleCheckout}
             className="bg-blue-700 flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800"
           >
@@ -124,27 +151,25 @@ function OrderDetails() {
             </a>
           </div>
         </div>
-      ) : (
-        <Skeleton allowHorizontal={false} allowImage={false} />
       )}
 
-      {cartProducts.length > 0 ? (
+      {cartProducts.length > 0 && (
         <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
-          <form className="space-y-4">
+          <form method="post" className="space-y-4" onSubmit={handleApplyCode}>
             <div>
               <label
                 htmlFor="voucher"
                 className="mb-2 block text-sm font-medium text-gray-900"
               >
                 {" "}
-                Do you have a voucher or gift card?{" "}
+                Do you have a coupon code?{" "}
               </label>
               <input
-                value=''
-                onChange={() => ""}
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
                 type="text"
                 id="voucher"
-                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500"
+                className="uppercase block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500"
                 placeholder=""
                 required
               />
@@ -157,8 +182,6 @@ function OrderDetails() {
             </button>
           </form>
         </div>
-      ) : (
-        <Skeleton allowHorizontal={false} allowImage={false} />
       )}
     </div>
   );
