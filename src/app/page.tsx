@@ -10,6 +10,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
+enum Constants {
+  BASE_URL = 'https://fakestoreapi.com',
+  PRODUCTS_URL = `${BASE_URL}/products` ,
+  OK_STATUS_CODE = 200
+}
+
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,16 +28,15 @@ export default function Home() {
   })
 
   const fetchProducts = async () => {
-    console.log('Fetching...')
     setLoading(true);
     try {
-      const response = await axios.get("https://fakestoreapi.com/products");
-      if (response.status === 200) {
+      const response = await axios.get(Constants.PRODUCTS_URL);
+      if (response.status === Constants.OK_STATUS_CODE) {
         setProducts(response.data);
       }
     } catch (err) {
       console.log("Error occurred in fetching products: ", err);
-      alert("Something went wrong!");
+      toast.error("Something went wrong!");
     } finally {
       setLoading(false);
     }
