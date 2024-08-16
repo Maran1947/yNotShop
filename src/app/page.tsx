@@ -22,6 +22,7 @@ export default function Home() {
   })
 
   const fetchProducts = async () => {
+    console.log('Fetching...')
     setLoading(true);
     try {
       const response = await axios.get("https://fakestoreapi.com/products");
@@ -52,7 +53,7 @@ export default function Home() {
     <>
       <Header />
       <ToastContainer />
-      <div className="grid grid-cols-4 gap-4 px-8 py-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-8 py-6 min-h-screen">
         {loading
           ? [1, 2, 3, 4, 5, 6].map((_, index) => {
               return <Skeleton key={index} allowHorizontal={false} allowImage={true} />;

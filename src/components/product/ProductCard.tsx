@@ -39,7 +39,7 @@ function ProductCard({ product, isAddedToCart, notify }: ProductProps) {
   }
 
   return (
-    <div className="w-full max-w-sm bg-white border border-gray-300 rounded-lg hover:shadow-md flex flex-col justify-between">
+    <div className="w-full sm:max-w-sm bg-white border border-gray-300 rounded-lg hover:shadow-md flex flex-col justify-between">
       <div className="flex items-center justify-center">
         <Image
           width={250}
@@ -51,7 +51,7 @@ function ProductCard({ product, isAddedToCart, notify }: ProductProps) {
       </div>
       <div className="px-5 pb-5">
         <a href="#">
-          <h5 className="text-xl font-semibold tracking-tight text-gray-700">
+          <h5 className="text-base sm:text-xl font-semibold tracking-tight text-gray-700">
             {getTruncateText(product.title, 50)}
           </h5>
         </a>
@@ -108,7 +108,7 @@ function ProductCard({ product, isAddedToCart, notify }: ProductProps) {
           </span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold text-gray-700">
+          <span className="text-xl sm:text-2xl font-bold text-gray-700">
             ${product.price}
           </span>
           <button

@@ -3,13 +3,13 @@ import React from "react";
 function Footer() {
   return (
     <footer className="rounded-lg bg-gray-200 px-10">
-      <div className="w-full md:py-8">
+      <div className="w-full py-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <a
             href="/"
             className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse"
           >
-            <span className="self-center text-2xl font-semibold whitespace-nowrap">
+            <span className="self-center text-xl md:text-2xl font-semibold whitespace-nowrap">
               yNot Shop
             </span>
           </a>

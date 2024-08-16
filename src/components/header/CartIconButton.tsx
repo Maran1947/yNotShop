@@ -14,12 +14,12 @@ function CartIconButton() {
   return (
     <div
       onClick={() => handleNavigateTo("/cart")}
-      className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-4 hover:bg-gray-100 hover:cursor-pointer"
+      className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-2 sm:px-4 hover:bg-gray-100 hover:cursor-pointer"
     >
       <div className="relative">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 text-gray-500"
+          className="h-4 w-4 text-gray-500 lg:w-5 lg:h-5"
           viewBox="0 0 20 20"
           fill="currentColor"
         >

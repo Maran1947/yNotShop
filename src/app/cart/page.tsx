@@ -10,7 +10,7 @@ function page() {
   return (
     <>
       <Header />
-      <section className="bg-white py-3 md:py-12">
+      <section className="bg-white px-2 py-3 md:py-12">
         <div className="mx-auto max-w-screen-xl">
           <h2 className="text-xl font-semibol sm:text-2xl">Shopping Cart</h2>
           <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
